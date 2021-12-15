@@ -23,3 +23,8 @@ module.exports = async function (fastify, opts) {
     options: Object.assign({}, opts)
   })
 }
+//使用fastify start 启动时，可以在此设置fastify启动时的自定义选项，但必须加上 -o 参数
+module.exports.options = {
+  ignoreTrailingSlash: true,
+  maxParamLength: 200,
+};
