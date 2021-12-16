@@ -2,8 +2,13 @@
 
 const path = require('path')
 const AutoLoad = require('fastify-autoload')
-
+/**
+ * setup some routes
+ * @param {import("fastify").FastifyInstance} fastify 
+ * @param {*} opts 
+ */
 module.exports = async function (fastify, opts) {
+  
   // Place here your custom code!
 
   // Do not touch the following lines
