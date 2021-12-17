@@ -26,18 +26,18 @@ exports.seed = function(knex) {
         {id: 16,parent_id: 4 , stitle: '磨损'},
         {id: 17,parent_id: 4 , stitle: '酸蚀症'},
         
-        {id: 17,parent_id: 5 , stitle: '牙周基础治疗'},
-        {id: 18,parent_id: 5 , stitle: '牙周手术'},
+        {id: 18,parent_id: 5 , stitle: '牙周基础治疗'},
+        {id: 19,parent_id: 5 , stitle: '牙周手术'},
 
-        {id: 19,parent_id: 6 , stitle: '隐形正畸'},
+        {id: 20,parent_id: 6 , stitle: '隐形正畸'},
 
-        {id: 20,parent_id: 7 , stitle: '植骨'},
-        {id: 21,parent_id: 7 , stitle: '软组织'},
-        {id: 22,parent_id: 7 , stitle: '数字化'},
+        {id: 21,parent_id: 7 , stitle: '植骨'},
+        {id: 22,parent_id: 7 , stitle: '软组织'},
+        {id: 23,parent_id: 7 , stitle: '数字化'},
 
-        {id: 23,parent_id: 12 , stitle: '全瓷冠'},
-        {id: 24,parent_id: 12 , stitle: '瓷贴面'},
-        {id: 25,parent_id: 12 , stitle: '嵌体'},
+        {id: 24,parent_id: 12 , stitle: '全瓷冠'},
+        {id: 25,parent_id: 12 , stitle: '瓷贴面'},
+        {id: 26,parent_id: 12 , stitle: '嵌体'},
       ]);
     });
 };

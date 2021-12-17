@@ -7,7 +7,7 @@ exports.up = function (knex) {
     table.string("head_pic");
     table.string("pwd", 50);
     table.string("title").comment("职称");
-    table.string("desc", 800).comment("简介");
+    table.text("desc").comment("简介");
     table.string("sign");
     table.string("token");
     table.integer('points').defaultTo(0)
