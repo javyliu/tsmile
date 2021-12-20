@@ -19,4 +19,4 @@ module.exports = fp(async function (fastify, opts) {
   }
 });
 
-module.exports.autoConfig = { name: "db", client: "mysql2", connection: process.env.db || "mysql2://javy:Javy123123@192.168.30.33:3306/tsmile?charset=utf8&connectTimeout=500", pool: { max: 10 } };
+module.exports.autoConfig = { name: "db", client: "mysql2", connection: process.env.db , pool: { max: 10 } };
