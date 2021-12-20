@@ -2,6 +2,7 @@
 
 const path = require('path')
 const AutoLoad = require('fastify-autoload')
+require('dotenv').config()
 /**
  * setup some routes
  * @param {import("fastify").FastifyInstance} fastify 
