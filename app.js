@@ -11,6 +11,7 @@ module.exports = async function (fastify, opts) {
   
   fastify.ready(() => {
     console.log(fastify.printRoutes())
+    fastify.log.info("-env:", process.env)
   })
   // Do not touch the following lines
 
