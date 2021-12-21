@@ -1,4 +1,5 @@
 // Update with your config settings.
+require('dotenv').config();
 
 module.exports = {
 
@@ -17,7 +18,7 @@ module.exports = {
 
   production: {
     client: 'mysql2',
-    connection: process.env.db,
+    connection: process.env.db_pro,
     pool: {
       min: 2,
       max: 10

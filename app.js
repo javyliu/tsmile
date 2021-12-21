@@ -10,12 +10,14 @@ require('dotenv').config()
  */
 module.exports = async function (fastify, opts) {
   
+
+
   fastify.ready(() => {
     console.log(fastify.printRoutes())
     fastify.log.info("-env:", process.env)
+    fastify.log.info("-opts:", opts)
   })
   // Do not touch the following lines
-
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
   // through your application
@@ -28,7 +30,7 @@ module.exports = async function (fastify, opts) {
   // define your routes in one of these
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'routes'),
-    options: Object.assign({}, opts)
+    options: Object.assign({ prefix: '/v1'}, opts)
   })
 }
 //使用fastify start 启动时，可以在此设置fastify启动时的自定义选项，但必须加上 -o 参数
