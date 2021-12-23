@@ -12,6 +12,7 @@ module.exports = fp(async function (fastify, opts) {
       if (instance[attName] === handle) {
         instance[attName].destroy();
         delete instance[attName];
+        done()
       }
     });
   } catch (error) {
