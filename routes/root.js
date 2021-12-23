@@ -29,14 +29,14 @@ module.exports = async function (fastify, opts) {
 
   fastify.get('/games', async function (request, reply) {
 
-    const res = await fastify.pipClient.request({ path: '/api/v1/games', method: 'GET' })
+    const {body} = await fastify.pipClient.request({ path: '/api/v1/games', method: 'GET' })
 
-    var body = await res.body.json()
+    var jbody = await body.json()
 
     console.log("-----------------")
-    fastify.log.info(JSON.stringify(body))
+    fastify.log.info(JSON.stringify(jbody))
     console.log("-----------------")
-    return body || 'no content'
+    return jbody || 'no content'
   })
 
 
