@@ -10,12 +10,11 @@ require('dotenv').config()
  */
 module.exports = async function (fastify, opts) {
   
-
+  console.log("=========opts: ", opts);
 
   fastify.ready(() => {
     console.log(fastify.printRoutes())
-    fastify.log.info("-env:", process.env)
-    fastify.log.info("-opts:", opts)
+
   })
   // Do not touch the following lines
   // This loads all plugins defined in plugins

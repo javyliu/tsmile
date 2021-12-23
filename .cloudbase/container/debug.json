@@ -1,0 +1,11 @@
+{
+  "containers": [
+    {
+      "name": "tsmile_app",
+      "domain": "",
+      "ip": "",
+      "port": 3100,
+      "containerId": "8e9fe81c1e5d26f08ea42abb68fdb29c6ebcec10ba17219f34fe2191e384fa8c"
+    }
+  ]
+}
