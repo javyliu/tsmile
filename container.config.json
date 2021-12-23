@@ -8,7 +8,7 @@
   "containerPort": 3000,
   // 环境变量，用字符串 key-value 对表示
   "envParams": { },
-  // CPU，单位：核
+  // CPU，单位：核xa
   "cpu": 0.5,
   // 内存，单位：G
   "mem": 1,
