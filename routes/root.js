@@ -23,13 +23,13 @@ module.exports = async function (fastify, opts) {
     })
     // const res= await fastify.axios.pip.get('/games')
 
- 
+
     return body.json() || 'no content'
   })
 
   fastify.get('/games', async function (request, reply) {
 
-    const {body} = await fastify.pipClient.request({ path: '/api/v1/games', method: 'GET' })
+    const { body } = await fastify.pipClient.request({ path: '/api/v1/games', method: 'GET' })
 
     var jbody = await body.json()
 
@@ -39,6 +39,11 @@ module.exports = async function (fastify, opts) {
     return jbody || 'no content'
   })
 
+  //跳转到页面
+  fastify.get('/to', async function (request, reply) {
+    reply.redirect('http://m.pipgame.com')
+  })
 
+ 
 }
 

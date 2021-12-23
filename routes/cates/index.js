@@ -8,7 +8,7 @@ module.exports = async function (fastify, opts) {
   fastify.addSchema({
     $id: 'cates',
     params: {
-      id: { type: 'integer' }
+      cate_id: { type: 'integer' }
     },
     response: {
       '2xx': {
@@ -18,6 +18,11 @@ module.exports = async function (fastify, opts) {
           stitle: { type: 'string' },
           parent_id: { type: 'integer' }
         }
+      }
+    },
+    definitions: {
+      int: {
+        type: 'integer'
       }
     }
   })
@@ -60,6 +65,21 @@ module.exports = async function (fastify, opts) {
     return res1
   })
 
+  //show 
+  fastify.get('/:cate_id', {
+    schema: {
+      params: {
+        cate_idid: {type: 'integer'}
+      },
+      query: {
+        page: {type: 'integer' }
+      }
+    }
+  }, async function (request, reply) {
+    let curPage = (request.query['page'] || 1) - 1
+    let res = await fastify.db.from("courses").where('category_id', request.params.cate_id).orderBy('ord', 'desc').limit(this.config.pageSize).offset(curPage * this.config.pageSize)
+    return res
 
+  })
 
 }
