@@ -26,6 +26,7 @@ module.exports = async function (fastify, opts) {
       }
     }
   })
+  //index
   fastify.get('/', async function (request, reply) {
     let res = await fastify.db.from("categories")
     let res1 = res.reduce((result, cur) => {
