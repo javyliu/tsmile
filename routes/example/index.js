@@ -8,6 +8,6 @@ module.exports = async function (fastify, opts) {
   
   fastify.get('/', async function (request, reply) {
     
-    return await fastify.db.from('tt1')
+    return await fastify.knex.from('tt1')
   })
 }

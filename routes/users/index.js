@@ -43,7 +43,7 @@ module.exports = async function (fastify, opts) {
       }
     }
   }, async function (request, reply) {
-    return await fastify.db.from('users')
+    return await fastify.knex.from('users')
   })
 
   //show
@@ -59,7 +59,7 @@ module.exports = async function (fastify, opts) {
       }
     }
   }, async function (request, reply) {
-    const user = await fastify.db.where('id', request.params.id).from('users').first()
+    const user = await fastify.knex.where('id', request.params.id).from('users').first()
 
     return user
   })

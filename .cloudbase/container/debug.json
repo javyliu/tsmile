@@ -4,8 +4,7 @@
       "name": "tsmile_app",
       "domain": "",
       "ip": "",
-      "port": 3100,
-      "containerId": "e68ca011fd49bc2ac00f271f8cdf1e892e17bc62d59ab44ec6f5cf257f3651ce"
+      "port": 3100
     }
   ]
 }

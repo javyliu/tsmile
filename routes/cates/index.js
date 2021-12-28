@@ -28,7 +28,7 @@ module.exports = async function (fastify, opts) {
   })
   //index
   fastify.get('/', async function (request, reply) {
-    let res = await fastify.db.from("categories")
+    let res = await fastify.db.Category.findAll({ raw: true, order: [['ord', 'desc'], 'id'] })
     let res1 = res.reduce((result, cur) => {
       if (cur.parent_id === 0) {
         result.push(cur)
@@ -64,21 +64,32 @@ module.exports = async function (fastify, opts) {
     }, [])
 
     return res1
+
   })
 
   //show 
   fastify.get('/:cate_id', {
     schema: {
       params: {
-        cate_idid: {type: 'integer'}
+        cate_idid: { type: 'integer' }
       },
       query: {
-        page: {type: 'integer' }
+        page: { type: 'integer' }
       }
     }
   }, async function (request, reply) {
     let curPage = (request.query['page'] || 1) - 1
-    let res = await fastify.db.from("courses").where('category_id', request.params.cate_id).orderBy('ord', 'desc').limit(this.config.pageSize).offset(curPage * this.config.pageSize)
+    // let res = await fastify.knex.from("courses").where('category_id', request.params.cate_id).orderBy('ord', 'desc').limit(this.setting.pageSize).offset(curPage * this.setting.pageSize)
+    let res = await fastify.db.Course.findAll({
+      where: { category_id: request.params.cate_id },
+      order: [['ord', 'desc']],
+      limit: this.setting.pageSize,
+      offset: curPage * this.setting.pageSize,
+      include: [{
+        model: fastify.db.User, 
+        attributes: ['name','real_name','ulevel']
+      }]
+    })
     return res
 
   })

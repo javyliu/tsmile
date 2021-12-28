@@ -20,4 +20,4 @@ module.exports = fp(async function (fastify, opts) {
   }
 });
 
-module.exports.autoConfig = { name: "db", client: "mysql2", connection: process.env.db , pool: { max: 10 } };
+module.exports.autoConfig = { name: "knex", client: "mysql2", connection: process.env.db , pool: { max: 10 } };

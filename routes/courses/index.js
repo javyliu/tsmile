@@ -17,8 +17,8 @@ module.exports = async function (fastify, opts) {
   }, async function (request, reply) {
     console.log("------page:", request.query['page'])
     let curPage = (request.query['page'] || 1) - 1
-    console.log("-------curPage:", curPage, this.config.pageSize);
-    let res = await fastify.db.from("courses").orderBy('id', 'desc').limit(this.config.pageSize).offset(curPage * this.config.pageSize)
+    console.log("-------curPage:", curPage, this.setting.pageSize);
+    let res = await fastify.knex.from("courses").orderBy('id', 'desc').limit(this.setting.pageSize).offset(curPage * this.setting.pageSize)
 
 
     return res
@@ -36,7 +36,7 @@ module.exports = async function (fastify, opts) {
       }
     }
   }, async (request, reply) => {
-    return await fastify.db.from("courses").where("id", request.params.id)
+    return await fastify.knex.from("courses").where("id", request.params.id)
   })
 }
 
