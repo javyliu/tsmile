@@ -26,8 +26,30 @@ module.exports = async function (fastify, opts) {
       }
     }
   })
+
+  const nestedObj = {
+    schema: {
+      response: {
+        '2xx': {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              stitle: { type: 'string' },
+              parent_id: { type: 'integer' },
+              children: {
+                type: 'array',
+                items: { $ref: '#/items#' }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   //index
-  fastify.get('/', async function (request, reply) {
+  fastify.get('/', nestedObj, async function (request, reply) {
     let res = await fastify.db.Category.findAll({ raw: true, order: [['ord', 'desc'], 'id'] })
     let res1 = res.reduce((result, cur) => {
       if (cur.parent_id === 0) {
@@ -86,8 +108,8 @@ module.exports = async function (fastify, opts) {
       limit: this.setting.pageSize,
       offset: curPage * this.setting.pageSize,
       include: [{
-        model: fastify.db.User, 
-        attributes: ['name','real_name','ulevel']
+        model: fastify.db.User,
+        attributes: ['name', 'real_name', 'ulevel']
       }]
     })
     return res
