@@ -4,28 +4,7 @@
  * @param {import('fastify').FastifyInstance} fastify 
  * @param {*} opts 
  */
-module.exports = async function (fastify, opts) {
-  fastify.addSchema({
-    $id: 'cates',
-    params: {
-      cate_id: { type: 'integer' }
-    },
-    response: {
-      '2xx': {
-        type: 'object',
-        properties: {
-          id: { type: 'integer' },
-          stitle: { type: 'string' },
-          parent_id: { type: 'integer' }
-        }
-      }
-    },
-    definitions: {
-      int: {
-        type: 'integer'
-      }
-    }
-  })
+module.exports = async function (fastify, opts) { 
 
   const nestedObj = {
     schema: {
@@ -101,7 +80,7 @@ module.exports = async function (fastify, opts) {
   }, async function (request, reply) {
     let curPage = request.query['page'] || 1
     // let res = await fastify.knex.from("courses").where('category_id', request.params.cate_id).orderBy('ord', 'desc').limit(this.setting.pageSize).offset(curPage * this.setting.pageSize)
-    let res = await fastify.db.Course.per(2).scope({method: ['page',curPage]}).findAll({
+    let res = await fastify.db.Course.scope({method: ['page',curPage]}).findAll({
       where: { category_id: request.params.cate_id },
       order: [['ord', 'desc']],      
       include: [{
