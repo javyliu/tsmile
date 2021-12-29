@@ -25,12 +25,7 @@ module.exports = async function (fastify, opts) {
     dir: path.join(__dirname, 'plugins'),
     options: Object.assign({}, opts)
   })
-
-  // 加载数据对像
-  fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'models'),
-    options: Object.assign({}, opts)
-  })
+  
   // This loads all plugins defined in routes
   // define your routes in one of these
   fastify.register(AutoLoad, {

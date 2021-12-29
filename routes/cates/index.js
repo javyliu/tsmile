@@ -37,7 +37,6 @@ module.exports = async function (fastify, opts) {
             properties: {
               id: { type: 'integer' },
               stitle: { type: 'string' },
-              parent_id: { type: 'integer' },
               children: {
                 type: 'array',
                 items: { $ref: '#/items#' }
@@ -93,20 +92,18 @@ module.exports = async function (fastify, opts) {
   fastify.get('/:cate_id', {
     schema: {
       params: {
-        cate_idid: { type: 'integer' }
+        cate_id: { type: 'integer' }
       },
       query: {
         page: { type: 'integer' }
       }
     }
   }, async function (request, reply) {
-    let curPage = (request.query['page'] || 1) - 1
+    let curPage = request.query['page'] || 1
     // let res = await fastify.knex.from("courses").where('category_id', request.params.cate_id).orderBy('ord', 'desc').limit(this.setting.pageSize).offset(curPage * this.setting.pageSize)
-    let res = await fastify.db.Course.findAll({
+    let res = await fastify.db.Course.per(2).scope({method: ['page',curPage]}).findAll({
       where: { category_id: request.params.cate_id },
-      order: [['ord', 'desc']],
-      limit: this.setting.pageSize,
-      offset: curPage * this.setting.pageSize,
+      order: [['ord', 'desc']],      
       include: [{
         model: fastify.db.User,
         attributes: ['name', 'real_name', 'ulevel']

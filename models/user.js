@@ -3,16 +3,10 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+  class User extends Model { 
     static associate(models) {
       this.hasMany(models.Course)
-      // define association here
-    }
+    }  
   };
   User.init({
     name: {
@@ -54,6 +48,12 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
     underscored: true,
+    hooks: {
+      beforeFind: (user,options) => {
+        console.log("-------before find-------")
+      }
+    },
+    
   });
   return User;
 };

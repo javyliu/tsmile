@@ -16,9 +16,12 @@ module.exports = async function (fastify, opts) {
     }
   }, async function (request, reply) {
     console.log("------page:", request.query['page'])
-    let curPage = (request.query['page'] || 1) - 1
+    let curPage = request.query['page'] || 1
     console.log("-------curPage:", curPage, this.setting.pageSize);
-    let res = await fastify.knex.from("courses").orderBy('id', 'desc').limit(this.setting.pageSize).offset(curPage * this.setting.pageSize)
+    // let res = await fastify.knex.from("courses").orderBy('id', 'desc').limit(this.setting.pageSize).offset(curPage * this.setting.pageSize)
+    let res = await fastify.db.Course.scope({method: ['page', curPage]}).findAll({
+      order: [['ord', 'desc']]     
+    })
 
 
     return res
@@ -26,17 +29,19 @@ module.exports = async function (fastify, opts) {
 
 
   //show
-  fastify.get("/:id", {
+  fastify.get("/:cid", {
     schema: {
       params: {
         type: 'object',
         properties: {
-          id: { type: 'integer' }
+          cid: { type: 'integer' }
         }
       }
     }
   }, async (request, reply) => {
-    return await fastify.knex.from("courses").where("id", request.params.id)
+    // return await fastify.knex.from("courses").where("id", request.params.id)
+    return await fastify.db.Course.findByPk(request.params.cid)
+
   })
 }
 

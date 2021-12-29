@@ -7,8 +7,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/database.js')[env];
 const db = {};
-const fp = require('fastify-plugin')
-
+const pageSize = 10;
 let sequelize;
 
 if (config.use_env_variable) {
@@ -31,12 +30,22 @@ Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
+  //添加per方法用来设置页面大小
+  db[modelName].per = function(psize){
+    this.psize = psize
+    return this
+  }
+  //添加page scope 用于分页,默认每页 10 项
+  db[modelName].addScope('page', function(curPage) {
+    let page_size = this.psize || pageSize
+    return {
+      limit: page_size,
+      offset: ( curPage - 1 ) * page_size
+    }
+  })
 });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-// module.exports = db;
-module.exports = fp(async function (fastify, opts) {
-  fastify.decorate('db', db)
-})
+module.exports = db;

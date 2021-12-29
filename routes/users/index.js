@@ -18,6 +18,7 @@ module.exports = async function (fastify, opts) {
         type: 'object',
         properties: {
           id: { type: 'integer' },
+          ulevel: { type: 'integer' },
           real_name: { type: 'string' },
           head_pic: { type: 'string' },
           title: { type: 'string' },
@@ -27,23 +28,36 @@ module.exports = async function (fastify, opts) {
     }
 
   })
-
-
   //index
   fastify.get('/', {
     schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          page: {type:'integer'},
+          ulevel: {type: 'integer'}
+        }
+      },
       response: {
         '2xx': {
           type: 'array',
           items: {
             $ref: 'users#/response/2xx'
-
           }
         }
       }
     }
   }, async function (request, reply) {
-    return await fastify.knex.from('users')
+    let curPage = request.query['page'] || 1
+    let where = {}
+    if (request.query['ulevel']) {
+      where.ulevel = request.query.ulevel
+    }
+
+    return await fastify.db.User.scope({method: ['page', curPage]}).findAll({
+      order: [['ord', 'desc']],
+      where
+    })
   })
 
   //show
@@ -59,7 +73,8 @@ module.exports = async function (fastify, opts) {
       }
     }
   }, async function (request, reply) {
-    const user = await fastify.knex.where('id', request.params.id).from('users').first()
+    // const user = await fastify.knex.where('id', request.params.id).from('users').first()
+    let user = await fastify.db.User.findByPk(request.params.id)
 
     return user
   })

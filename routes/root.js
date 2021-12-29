@@ -17,7 +17,9 @@ module.exports = async function (fastify, opts) {
     //   content: "安全检查测试文本"
     // }))
     const { body } = await fastify.wxClient.request({
-      path: '/wxa/msg_sec_check', method: 'POST', body: JSON.stringify({
+      path: '/wxa/msg_sec_check', 
+      method: 'POST', 
+      body: JSON.stringify({
         content: "安全检查测试文本"
       })
     })
@@ -34,7 +36,8 @@ module.exports = async function (fastify, opts) {
     var jbody = await body.json()
 
     console.log("-----------------")
-    fastify.log.info(JSON.stringify(jbody))
+    console.log(jbody)
+
     console.log("-----------------")
     return jbody || 'no content'
   })
