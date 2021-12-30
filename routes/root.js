@@ -1,5 +1,6 @@
 'use strict'
 
+const { requireFastifyForModule } = require('fastify-cli/util')
 const { request } = require('undici')
 
 /**
@@ -64,9 +65,39 @@ module.exports = async function (fastify, opts) {
   /**
    * 用于分发token, 正常需要提供几号名及密码，在微信生态圈只需验证用户授权后提交的token即可 
    */
-  fastify.post('/authme', async function(request, reply){
-     let token = await reply.jwtSign({uid: 1})
-     return token
+  const authSchema = {
+    schema: {
+      body: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          password: { type: 'string' }
+        },
+        required: ['name', 'password']
+
+      }
+    }
+  }
+  fastify.post('/authme', authSchema, async function (request, reply) {
+    console.log("--------------")
+    console.log(request.body)
+    let user = await fastify.db.User.findOne({
+      where: {name: request.body.name}      
+    })
+    if (user) {
+      let is_valid = await fastify.bcrypt.compare(request.body.password, user.pwd)
+      if(is_valid){
+        let token = await reply.jwtSign({ uid: 1 })
+        console.log(token)
+        return token
+
+      }else{
+        throw new Error("密码错误")
+      }
+    }else{
+      throw new Error("用户名不存在")
+    }
+
   })
 
 

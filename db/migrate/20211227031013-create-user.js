@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       pwd: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.STRING(100)
       },
       title: {
         type: Sequelize.STRING,

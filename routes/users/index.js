@@ -79,4 +79,6 @@ module.exports = async function (fastify, opts) {
     return user
   })
 
+  
+
 }
