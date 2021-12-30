@@ -9,7 +9,7 @@
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
     "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l debug --ignore-watch='test .vscode migrations seeds' -a 0.0.0.0 -o -P app.js -- --opsa --opsb=100"
+    "dev": "fastify start -w -l debug --ignore-watch='test .vscode migrations seeds tmp' -a 0.0.0.0 -o -P app.js -- --opsa --opsb=100"
   },
   "keywords": [],
   "author": "",

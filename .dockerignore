@@ -22,3 +22,6 @@
 **/values.dev.yaml
 README.md
 .nyc_output
+tmp
+knexfile.js
+start_db

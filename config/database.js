@@ -4,21 +4,21 @@ module.exports = {
     "username": "javy",
     "password": process.env.tsmile_pwd,
     "database": "tsmile",
-    "host": "192.168.30.33",
+    "host": process.env.host, 
     "dialect": "mysql"
   },
   "test": {
     "username": "javy",
     "password": process.env.tsmile_pwd,
     "database": "tsmile_test",
-    "host": "192.168.30.33",
+    "host": process.env.host, 
     "dialect": "mysql"
   },
   "production": {
     "username": "javy",
     "password": process.env.tsmile_pwd,
     "database": "tsmile",
-    "host": "192.168.30.33",
+    "host": process.env.host, 
     "dialect": "mysql"
   }
 }

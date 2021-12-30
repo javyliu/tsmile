@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# Author: javy liu
+#Date & Time: 2021-12-30 21:52:41
+#Description:
+#!/usr/bin/env sh
+# Author: javy liu
+#Date & Time: 2021-01-25 15:45:15
+#Description:
+
+count=`docker ps -a | grep mysql_1|wc -l`
+if [[ 0 -eq $count ]]; then
+  echo 'create mysql_1 container and start it'
+  docker run -v "$PWD/tmp/mysql_data":/var/lib/mysql  --name mysql_1 -e MYSQL_ROOT_PASSWORD='123123'  -p 3306:3306  -d mysql:5.7 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+else
+  echo 'start mysql_1 container'
+  docker start mysql_1
+fi
