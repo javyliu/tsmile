@@ -21,8 +21,10 @@ module.exports = async function (fastify, opts) {
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
   // through your application
+  //只会自动加载非 spec 开头的插件
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'plugins'),
+    ignorePattern: /^spec.*?.js$/,
     options: Object.assign({}, opts)
   })
   
