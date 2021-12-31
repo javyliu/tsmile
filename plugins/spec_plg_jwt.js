@@ -9,7 +9,7 @@ async function plg(fastify, opts) {
   fastify.register(require('fastify-jwt'), {
     secret: 'f7284181698da718f771f5d8d46d367151fa3546ffc7747e6798363be1b7a61b1d9c608e3f9cafc81',
     sign: {
-      expiresIn: 60
+      expiresIn: '1 day'
     }
   })
 

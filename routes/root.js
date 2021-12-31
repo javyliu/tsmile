@@ -74,6 +74,9 @@ module.exports = async function (fastify, opts) {
       }
     }
   }
+  /**
+   * 如何在async回调中设置header?
+   */
   fastify.post('/authme', authSchema, async function (request, reply) {
     console.log("--------------")
     console.log(request.body)
@@ -85,13 +88,14 @@ module.exports = async function (fastify, opts) {
       if(is_valid){
         let token = await reply.jwtSign({ uid: 1 })
         console.log(token)
-        return token
+        reply.header('token', token)
+        return {token}
 
       }else{
-        throw new Error("密码错误")
+        throw {statusCode: 402, message: '密码错误'}
       }
     }else{
-      throw new Error("用户名不存在")
+      throw {statusCode: 401, message: '用户不存在'}
     }
 
   })
