@@ -1,8 +1,4 @@
 'use strict'
-
-const { requireFastifyForModule } = require('fastify-cli/util')
-const { request } = require('undici')
-
 /**
  * 
  * @param {import('fastify').FastifyInstance} fastify 
