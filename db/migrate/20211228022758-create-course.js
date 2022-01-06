@@ -50,7 +50,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        comment: '创建者'
       },
       ord: {
         type: Sequelize.INTEGER,
@@ -71,6 +72,9 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
+    await queryInterface.addIndex('courses', ['user_id'])
+    await queryInterface.addIndex('courses', ['category_id'])
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('courses');

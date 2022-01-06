@@ -60,3 +60,4 @@ profile*
 tmp
 .cloudbase
 course_data.json
+tmp_*

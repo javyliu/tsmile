@@ -19,6 +19,8 @@ module.exports = {
         defaultValue: 0
       }    
     });
+
+    await queryInterface.addIndex("categories", ['parent_id'])
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('categories');

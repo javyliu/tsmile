@@ -5,7 +5,11 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class User extends Model { 
     static associate(models) {
-      this.hasMany(models.Course)
+      this.hasMany(models.UserCourse)
+      //我创建的
+      this.hasMany(models.Course, {as: 'createdByme', foreignKey: 'user_id'})
+      // 属于我的
+      this.belongsToMany(models.Course, {through: models.UserCourse})
     }  
   };
   User.init({
@@ -14,12 +18,12 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: true,
         notEmpty: true,
-        len: [4, 100]
+        len: [1, 100]
       }
     },
     real_name: {
       type: DataTypes.STRING(100),
-      len: [4, 100]
+      len: [1, 100]
     },
     head_pic: DataTypes.STRING,
     pwd: DataTypes.STRING(50),
