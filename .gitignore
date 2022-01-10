@@ -61,3 +61,5 @@ tmp
 .cloudbase
 course_data.json
 tmp_*
+cate_data.json
+teacher_data.json

@@ -47,7 +47,8 @@ module.exports = (sequelize, DataTypes) => {
     wechat_name: DataTypes.STRING(150),
     address: DataTypes.STRING,
     job: DataTypes.STRING,
-    ord: DataTypes.INTEGER
+    ord: DataTypes.INTEGER,
+    ori_uid: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'User',

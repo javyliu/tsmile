@@ -1,16 +1,28 @@
 'use strict';
 
+let courses = JSON.parse(fs.readFileSync('./course_data.json'))
+courses.sort((a,b) => a.id - b.id)
+
+courses.map(it => {
+  let c = {
+    id: it.id,
+    ctitle: it.ctitle,
+    price: it.minPrice,
+    description: it.description,
+    pic_img: it.images.large,
+    click_count: it.hitNum,
+    clevel: 2,
+    is_recommend: 1,
+    dtype: 1,
+    category_id: it.category_id,
+    user_id: 0,
+    ord: it.ord,
+    process: 1
+  }
+})
+
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+  up: async (queryInterface, Sequelize) => {   
     let date = new Date()
     await queryInterface.bulkInsert('courses', [
       {

@@ -74,6 +74,10 @@ module.exports = {
         comment: '排序,从大到小',
         defaultValue: 0
       },
+      ori_uid:{
+        type: Sequelize.INTEGER,
+        comment: '原网站用户id'
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

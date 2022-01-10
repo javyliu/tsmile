@@ -18,6 +18,8 @@ const baseUrl = "http://www.tsmileedu.com"
 const coursePath = "/course/explore"
 const teacherPath = "/teacher"
 
+let cates = null
+
 //直接设置总页数
 let totalPages = 6
 
@@ -37,7 +39,7 @@ const getList = async (page) => {
 
   let promises = $(".course-item").map(async (i, it) => {
     console.log("------------", i)
-    let item = await getDetail(it.find("a").attr("href"))
+    let item = await getDetail($(it).find("a").attr("href"))
     courseAry.push(item)
   })
 
@@ -48,7 +50,6 @@ const getList = async (page) => {
   }
 
   return courseAry
-
 }
 
 /**
@@ -76,7 +77,7 @@ const parAry = (oriAry, size) => {
  */
 const getDetail = async (path) => {
   let val = {}
-  val.id = parseInt(path.match(/\d+/)[0])
+  val.id = path.match(/\d+/)[0]
 
   console.log("------get request ", path)
   let detailRes = await request(`${baseUrl}${path}`, { maxRedirections: 2 })
@@ -85,6 +86,8 @@ const getDetail = async (path) => {
   let cres = cheerio.load(detailBody)
   let detail = cres("#show-product-page").data("goods")
 
+  val.category_id = getCateId(val.id)
+  val.hitNum = detail.hitNum
   val.ctitle = detail.title
   val.minPrice = detail.minPrice
   val.maxPrice = detail.maxPrice
@@ -96,7 +99,27 @@ const getDetail = async (path) => {
   val.ord = detail.recommendWeight
   val.gooldId = detail.id
   val.subtitle = detail.subtitle
+  val.usageMode = detail.specs[0].usageMode
+  val.usageDays = detail.specs[0].usageDays
+  val.usageStartTime = detail.specs[0].usageStartTime
+  val.usageEndTime = detail.specs[0].usageEndTime
+
   return val
+}
+
+/**
+ * 返回类别id
+ * @param {String} idStr 
+ * @returns 
+ */
+const getCateId = (idStr) => {
+  for (let k in cates) {
+    if (cates[k].includes(idStr)) {
+      return k
+    }
+  }
+  return 0;
+
 }
 
 /**
@@ -104,6 +127,15 @@ const getDetail = async (path) => {
  * @returns 
  */
 const getCourse = async () => {
+
+  if (!fs.existsSync("./cate_data.json")) {
+    console.log("请先获取类别")
+    process.exit(1)
+  }
+
+  if (!cates) {
+    cates = JSON.parse(fs.readFileSync("./cate_data.json"))
+  }
 
   setTotalPage(coursePath)
 
@@ -113,10 +145,7 @@ const getCourse = async () => {
     console.log(`----第${index}页------`)
     ary.push(items)
   }
-
-
   console.log("for 循环结束")
-
   ary = ary.flat()
 
   fs.writeFileSync('course_data.json', JSON.stringify(ary), console.log)
@@ -151,11 +180,11 @@ const getTeacherList = async (page) => {
   let teacherAry = []
   console.log("------return code: ", statusCode)
   let _html = await body.text()
-  let $ = cheerio.load(_html) 
+  let $ = cheerio.load(_html)
 
   let promises = $(".teacher-img").map(async (i, it) => {
     console.log("------------", i)
-    let item = await getTeacherDetail($(it).attr("href")) 
+    let item = await getTeacherDetail($(it).attr("href"))
     teacherAry.push(item)
   })
 
@@ -187,7 +216,7 @@ const getTeacherDetail = async (path) => {
   let cres = cheerio.load(detailBody)
   val.head_pic = baseUrl + cres(".user-avatar img").attr("src")
   val.name = cres(".user-avatar .name").text().trim()
-  val.title = cres(".user-avatar .mrm").text().trim()
+  val.title = cres(".user-avatar .mrm:first").text().trim()
   val.real_name = val.name
 
   let course_ids = []
@@ -221,7 +250,7 @@ const getTeacherDetail = async (path) => {
  */
 const getUserCourseIds = (cheerioPage) => {
   let course_ids = []
-  cheerioPage(".course-info .link-dark").each((it,ele) => {
+  cheerioPage(".course-info .link-dark").each((it, ele) => {
     let href = cheerioPage(ele).attr("href")
     let n = href.replace(/[^\d]+/g, '')
     course_ids.push(parseInt(n))
@@ -243,7 +272,6 @@ const getTeachers = async () => {
     ary.push(...items)
   }
 
-
   console.log("for 循环结束")
 
   fs.writeFileSync('teacher_data.json', JSON.stringify(ary), console.log)
@@ -251,21 +279,69 @@ const getTeachers = async () => {
 
 }
 
+/**
+ * 得到所有教程类别
+ * @returns 
+ */
+const getCates = async () => {
+  // await setTotalPage(coursePath)
+
+  let cateListPage = await request(baseUrl + coursePath)
+  let $ = cheerio.load(await cateListPage.body.text())
+  let navList = $(".tabs-group a")
+
+
+  cates = {}
+
+  for (let idx = 0; idx < navList.length; idx++) {
+    if (idx === 0) continue
+    cates[idx] = []
+    const href = navList[idx].attribs.href;
+    let pcontent = await request(baseUrl + href)
+    let pbody = cheerio.load(await pcontent.body.text())
+    let _ary = pbody(".course-item .course-img a").map((k, v) => v.attribs.href.match(/\d+/))
+    cates[idx].push(..._ary)
+
+    let page_hrefs = pbody(".navigation a")
+    if (page_hrefs.length > 1) {
+      for (let index = 1; index < page_hrefs.length; index++) {
+        let pcontent1 = await request(baseUrl + page_hrefs[index].attribs.href)
+        let pbody1 = cheerio.load(await pcontent1.body.text())
+        let _ary1 = pbody(".course-item .course-img a").map((k, v) => v.attribs.href.match(/\d+/))
+        cates[idx].push(..._ary1)
+      }
+    }
+
+    console.log(cates[idx])
+  }
+
+
+
+  console.log("for 循环结束", cates)
+
+  fs.writeFileSync('cate_data.json', JSON.stringify(cates), console.log)
+  return cates
+
+}
+
+
+//////////////////////////////////////////
+//得到所有课程类别
+// await getCates()
+//////////////////////////////////////////
+
 
 //////////////////////////////////////////
 //得到所有课堂
 // await getCourse()
 // console.log("the result is in the course_data.json")
-//得到所有讲师
 //////////////////////////////////////////
 
 
 //////////////////////////////////////////
 //得到所有讲师
-//////////////////////////////////////////
 await getTeachers()
 //////////////////////////////////////////
-
 
 
 
