@@ -4,7 +4,7 @@ let courses = JSON.parse(fs.readFileSync('./course_data.json'))
 courses.sort((a,b) => a.id - b.id)
 
 courses.map(it => {
-  let c = {
+  return {
     id: it.id,
     ctitle: it.ctitle,
     price: it.minPrice,

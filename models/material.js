@@ -10,23 +10,23 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Course)
-      this.belongsTo(models.User)
+      this.belongsTo(models.Course, {foreignKey: 'courseId'})
+      this.belongsTo(models.User, {foreignKey: 'userId'})
     }
   };
   Material.init({
     mtitle: DataTypes.STRING,
     mtype: DataTypes.INTEGER,
     duration: DataTypes.STRING,
-    short_file_url: DataTypes.STRING,
-    file_url: DataTypes.STRING,
-    course_id: DataTypes.INTEGER,
-    user_id: DataTypes.INTEGER,
+    shortFileUrl: DataTypes.STRING,
+    fileUrl: DataTypes.STRING,
+    courseId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     ord: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Material',
-    underscored: true
+    // modelName: 'material',
+    // underscored: true
   });
   return Material;
 };

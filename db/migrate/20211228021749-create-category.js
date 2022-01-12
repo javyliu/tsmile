@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('categories', {
+    await queryInterface.createTable('Categories', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,7 +11,7 @@ module.exports = {
       stitle: {
         type: Sequelize.STRING(100)
       },
-      parent_id: {
+      parentId: {
         type: Sequelize.INTEGER(2)
       },
       ord: {
@@ -20,9 +20,9 @@ module.exports = {
       }    
     });
 
-    await queryInterface.addIndex("categories", ['parent_id'])
+    await queryInterface.addIndex("Categories", ['parentId'])
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('categories');
+    await queryInterface.dropTable('Categories');
   }
 };

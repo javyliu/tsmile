@@ -3,25 +3,25 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
  
-    await queryInterface.createTable('user_courses', {
-      user_id: {
+    await queryInterface.createTable('UserCourses', {
+      userId: {
         type: Sequelize.INTEGER,       
       },
-      course_id: {
+      courseId: {
         type: Sequelize.INTEGER,       
       }
     },{
       timestamps: false
     })
 
-    await queryInterface.addIndex('user_courses', ['user_id'])
-    await queryInterface.addIndex('user_courses', ['course_id'])
+    await queryInterface.addIndex('UserCourses', ['userId'])
+    await queryInterface.addIndex('UserCourses', ['courseId'])
   },
 
   down: async (queryInterface, Sequelize) => {
    
-    // await queryInterface.removeIndex('user_courses', ['user_id'])
-    // await queryInterface.removeIndex('user_courses', ['course_id'])
-    await queryInterface.dropTable('user_courses');
+    // await queryInterface.removeIndex('UserCourses', ['user_id'])
+    // await queryInterface.removeIndex('UserCourses', ['course_id'])
+    await queryInterface.dropTable('UserCourses');
   }
 };
