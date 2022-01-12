@@ -20,7 +20,7 @@ module.exports = {
         comment:'到期时间，空时表示永不过期'      
       },
       description: {
-        type: Sequelize.STRING(800)
+        type: Sequelize.TEXT
       },
       picImg: {
         type: Sequelize.STRING,

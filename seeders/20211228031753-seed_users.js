@@ -3,10 +3,11 @@ const bcrypt = require('bcryptjs')
 const salt = bcrypt.genSaltSync(8)
 const pwd = bcrypt.hashSync('123123', salt)
 let date = new Date()
+const fs = require("fs")
 
-const users = JSON.parse(fs.readFileSync('./teacher_data.json'))
+let users = JSON.parse(fs.readFileSync('./teacher_data.json'))
 users.sort((a,b) => a.id - b.id)
-users.map(it => {
+users = users.map(it => {
   return {
     oriUid: it.id,
     name: it.name,
@@ -17,9 +18,9 @@ users.map(it => {
     title: it.title,
     desc: it.desc,
     createdAt: date,
-    updatedAt: date     
+    updatedAt: date,
+    course_ids: it.course_ids    
   }
-
 })
 
 //添加管理员
@@ -36,6 +37,21 @@ users.unshift({
   updatedAt: date
 })
 
+let user_courses = []
+//设置id
+users.forEach((ele,idx) => {
+  ele.id = idx + 1
+  if (ele.course_ids && ele.course_ids.length > 0) {
+    ele.course_ids.forEach( it => {
+      let tmp = {}
+      tmp.userId = ele.id
+      tmp.courseId = it
+      user_courses.push(tmp)
+    })    
+  } 
+  delete ele.course_ids
+});
+console.log(users)
 
 /**
  * @type {import('sequelize-cli').Migration}
@@ -53,7 +69,8 @@ module.exports = {
     */
     
     // await queryInterface.sequelize.query('truncate users;')
-    await queryInterface.bulkInsert('users', ary);
+    await queryInterface.bulkInsert('Users', users);
+    await queryInterface.bulkInsert('UserCourses', user_courses);
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -63,6 +80,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('users', null, { truncate: true });
+    await queryInterface.bulkDelete('Users', null, { truncate: true });
+    await queryInterface.bulkDelete('UserCourses', null, { truncate: true });
   }
 };

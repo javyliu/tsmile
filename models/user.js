@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.UserCourse, {foreignKey: 'userId'})
       //我创建的
-      this.hasMany(models.Course, {as: 'NyCourses', foreignKey: 'userId'})
+      this.hasMany(models.Course, {as: 'MyCourses', foreignKey: 'userId'})
       // 属于我的
       this.belongsToMany(models.Course, {through: models.UserCourse, foreignKey: 'userId', otherKey: 'courseId' })
     }  
