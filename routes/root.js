@@ -12,7 +12,27 @@ module.exports = async function (fastify, opts) {
 
 
   fastify.get('/', async function (request, reply) {
+    // let u1 = null
+    // try {
+    //   u1 = await fastify.db.User.create({
+    //     name: request.query.name || 'hello1', pwd: '123123',
+    //     user_courses: [{ course_id: 1 }, { course_id: 2 }]
+    //   },
+    //     {
+    //       include: [
+    //         {
+    //           association: fastify.db.User.associations.UserCourses
+    //         }
+    //       ]
+    //     })
 
+    // } catch (err) {
+    //   throw err.errors || err
+
+    // }
+
+
+    // return u1
     return { header: request.headers }
   })
 
@@ -81,21 +101,21 @@ module.exports = async function (fastify, opts) {
     console.log("--------------")
     console.log(request.body)
     let user = await fastify.db.User.findOne({
-      where: {name: request.body.name}      
+      where: { name: request.body.name }
     })
     if (user) {
       let is_valid = await fastify.bcrypt.compare(request.body.password, user.pwd)
-      if(is_valid){
+      if (is_valid) {
         let token = await reply.jwtSign({ uid: 1 })
         console.log(token)
         reply.header('token', token)
-        return {token}
+        return { token }
 
-      }else{
-        throw {statusCode: 402, message: '密码错误'}
+      } else {
+        throw { statusCode: 402, message: '密码错误' }
       }
-    }else{
-      throw {statusCode: 401, message: '用户不存在'}
+    } else {
+      throw { statusCode: 401, message: '用户不存在' }
     }
 
   })

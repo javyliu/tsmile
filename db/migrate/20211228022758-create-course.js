@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('courses', {
+    await queryInterface.createTable('Courses', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,24 +14,24 @@ module.exports = {
       price: {
         type: Sequelize.DECIMAL(8,2)
       },
-      expiry_date: {
+      expiryDate: {
         type: Sequelize.STRING(100),
         defaultValue: '',
         comment:'到期时间，空时表示永不过期'      
       },
       description: {
-        type: Sequelize.STRING(800)
+        type: Sequelize.TEXT
       },
-      pic_img: {
+      picImg: {
         type: Sequelize.STRING,
         comment: '封面图片'
       },
-      click_count: {
+      clickCount: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
         comment: '点击次数'
       },
-      is_recommend: {
+      isRecommend: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         comment: '是否推荐'
@@ -46,11 +46,12 @@ module.exports = {
         defaultValue: 0,
         comment: '直播课程(1)|免费课程 (2), 两者都是:3'
       },
-      category_id: {
+      categoryId: {
         type: Sequelize.INTEGER
       },
-      user_id: {
-        type: Sequelize.INTEGER
+      userId: {
+        type: Sequelize.INTEGER,
+        comment: '创建者'
       },
       ord: {
         type: Sequelize.INTEGER,
@@ -62,17 +63,20 @@ module.exports = {
         defaultValue: false,
         comment: '课程是否完结'
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
+
+    await queryInterface.addIndex('Courses', ['userId'])
+    await queryInterface.addIndex('Courses', ['categoryId'])
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('courses');
+    await queryInterface.dropTable('Courses');
   }
 };

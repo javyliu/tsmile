@@ -5,7 +5,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,11 +17,11 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      real_name: {
+      realName: {
         type: Sequelize.STRING(100)     
 
       },
-      head_pic: {
+      headPic: {
         type: Sequelize.STRING
       },
       pwd: {
@@ -60,7 +60,7 @@ module.exports = {
       company: {
         type: Sequelize.STRING
       },
-      wechat_name: {
+      wechatName: {
         type: Sequelize.STRING(50)
       },
       address: {
@@ -74,17 +74,24 @@ module.exports = {
         comment: '排序,从大到小',
         defaultValue: 0
       },
-      created_at: {
+      oriUid:{
+        type: Sequelize.INTEGER,
+        comment: '原网站用户id'
+      },
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
+
+    await queryInterface.addIndex('Users', ['name'])
+    await queryInterface.addIndex('Users', ['token'])
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('Users');
   }
 };

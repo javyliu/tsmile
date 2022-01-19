@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('materials', {
+    await queryInterface.createTable('Materials', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -20,34 +20,36 @@ module.exports = {
         type: Sequelize.STRING(100),
         comment: '视频时间'
       },
-      short_file_url: {
+      shortFileUrl: {
         type: Sequelize.STRING,
         comment: '试看文件'
       },
-      file_url: {
+      fileUrl: {
         type: Sequelize.STRING
       },
-      course_id: {
+      courseId: {
         type: Sequelize.INTEGER
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER
       },
       ord: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
+    await queryInterface.addIndex("Materials", ['courseId'])
+    await queryInterface.addIndex("Materials", ['userId'])
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('materials');
+    await queryInterface.dropTable('Materials');
   }
 };

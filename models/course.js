@@ -10,28 +10,29 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.User)
-      this.belongsTo(models.Category)
+      this.belongsTo(models.User, {as: 'Creator', foreignKey: 'userId'})
+      this.belongsTo(models.Category, {foreignKey: 'categoryId'})
+      this.belongsToMany(models.User, {as: 'Teachers',foreignKey: 'courseId', otherKey: 'userId', through: models.UserCourse})
     }
   };
   Course.init({
     ctitle: DataTypes.STRING,
     price: DataTypes.DECIMAL,
-    expiry_date: DataTypes.STRING,
+    expiryDate: DataTypes.STRING,
     description: DataTypes.STRING,
-    pic_img: DataTypes.STRING,
-    click_count: DataTypes.INTEGER,
-    is_recommend: DataTypes.BOOLEAN,
+    picImg: DataTypes.STRING,
+    clickCount: DataTypes.INTEGER,
+    isRecommend: DataTypes.BOOLEAN,
     clevel: DataTypes.INTEGER,
     dtype: DataTypes.INTEGER,
-    category_id: DataTypes.INTEGER,
-    user_id: DataTypes.INTEGER,
+    categoryId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     ord: DataTypes.INTEGER,
     process: DataTypes.BOOLEAN
   }, {
     sequelize,
-    modelName: 'Course',
-    underscored: true,
+    // modelName: 'course',
+    // underscored: true,
   });
   return Course;
 };

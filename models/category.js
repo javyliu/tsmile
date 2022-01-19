@@ -10,24 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.Course)
+      this.hasMany(models.Course, {foreignKey: 'categoryId'})
       this.hasMany(models.Category, {
-        as: 'children',
-        foreignKey: 'parent_id'
+        as: 'Children',
+        foreignKey: 'parentId'
       })
     }
   };
   Category.init({
     stitle: DataTypes.STRING(100),
-    parent_id: DataTypes.INTEGER,
+    parentId: DataTypes.INTEGER,
     ord: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
   }, {
     sequelize,
-    modelName: 'Category',
-    underscored: true,
+    // modelName: 'category',
+    // underscored: true,
     timestamps: false,
   });
   return Category;
