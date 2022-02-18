@@ -3,7 +3,9 @@
 import { request } from 'undici'
 import * as cheerio from 'cheerio'
 import * as fs from 'fs'
-
+import axios from 'axios'
+import FormData from 'form-data'
+import path from 'path'
 /**
  * const variables
  * 从原网站获取数据
@@ -17,6 +19,12 @@ import * as fs from 'fs'
 const baseUrl = "http://www.tsmileedu.com"
 const coursePath = "/course/explore"
 const teacherPath = "/teacher"
+
+const wxApiUrl = 'http://api.weixin.qq.com'
+const envServer = 'env01-1gn1foc87d62f49f'
+
+let remoteObjUrl = `${wxApiUrl}/tcb/uploadfile`
+
 
 let cates = null
 
@@ -324,6 +332,79 @@ const getCates = async () => {
 
 }
 
+/**
+ * 把图片上传到云端
+ */
+const imgToCloud = async () => {
+  //user head pic
+  let users = JSON.parse(fs.readFileSync('./teacher_data.json'))
+
+  for (const user of users) {
+    let url = user.head_pic
+    let fname = ''
+
+    try {
+      fname = await uploadFile(url)
+    } catch (error) {
+      console.log(error)
+      fname = 'get_error'
+    }
+    user.imgCloudId = fname
+  }
+
+  fs.writeFileSync('./teacher_data.json', JSON.stringify(users), console.log)
+
+  let courses = JSON.parse(fs.readFileSync('./course_data.json'))
+
+  for (const course of courses) {
+    let url = course.images.large
+    let fname = ''
+    try {
+      fname = await uploadFile(url)      
+    } catch (error) {
+      console.log(error)
+      fname = 'get_error'
+    }
+    course.images.imgCloudId = fname
+  }
+
+  fs.writeFileSync('./course_data.json', JSON.stringify(courses), console.log)
+
+}
+
+const uploadFile = async (url,preStr = "pics") => {
+  if (url == null || url.length <= 0) {
+    return ''
+  }
+
+  let filename = `${preStr}/${path.parse(url).base}`
+  console.log("-----------filename: ", filename)
+  let { data: res } = await axios.post(remoteObjUrl, {
+    env: envServer,
+    path: filename
+  })
+
+  console.log("-------res:", res)
+
+  //原图像url
+  let { data: stream } = await axios.get(url, { responseType: 'stream' })
+
+  // console.log("--------stream:", stream)
+  //上传至对像存储
+  let formData = new FormData()
+  formData.append("key", filename)
+  formData.append("Signature", res.authorization)
+  formData.append("x-cos-security-token", res.token)
+  formData.append("x-cos-meta-fileid", res.cos_file_id)
+  formData.append("file", await stream.read())
+  await axios.post(res.url, formData, { headers: formData.getHeaders() })
+
+  return res.file_id
+
+}
+
+
+
 
 //////////////////////////////////////////
 //得到所有课程类别
@@ -340,8 +421,15 @@ const getCates = async () => {
 
 //////////////////////////////////////////
 //得到所有讲师
-await getTeachers()
+// await getTeachers()
 //////////////////////////////////////////
+
+//////////////////////////////////////////
+// 上传相应图片至云端
+await imgToCloud()
+// await uploadFile('http://www.tsmileedu.com/files/user/2018/05-22/224116c80100914807.jpg')
+//////////////////////////////////////////
+
 
 
 

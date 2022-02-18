@@ -1,4 +1,6 @@
 'use strict'
+const fs = require('fs')
+const FormData = require('form-data')
 /**
  * 
  * @param {import('fastify').FastifyInstance} fastify 
@@ -119,5 +121,69 @@ module.exports = async function (fastify, opts) {
     }
 
   })
+
+  /**
+   * 换成axios后终于好了，undici还是文档少，找不到post formdata的方法
+   */
+  fastify.get('/startUpload', async function (request, reply) {
+    console.log("start upload file");
+
+    // var { body } = await fastify.undici.request({
+    //   path: '/tcb/uploadfile',
+    //   method: 'POST',
+    //   body: JSON.stringify({
+    //     env: 'env01-1gn1foc87d62f49f',
+    //     path: "pics/image_2.jpg"
+    //   })
+    // })
+
+    var res = await fastify.axios.wx.post('/tcb/uploadfile', {
+      env: 'env01-1gn1foc87d62f49f',
+      path: "pics/image_3.jpg"
+    })
+
+    // var jbody = await body.json()
+    var jbody = res.data
+
+    console.log(jbody)
+
+    var file = fs.createReadStream(`${process.cwd()}/image_1.jpg`);
+    console.log("---------file pwd:", process.cwd())
+
+    // const fData = new fastify.undici.FormData()
+    const fData = new FormData()
+    fData.append("key", "pics/image_3.jpg")
+    fData.append("Signature", jbody.authorization)
+    fData.append("x-cos-security-token", jbody.token)
+    fData.append("x-cos-meta-fileid", jbody.cos_file_id)
+    fData.append("file", file)
+
+    // var res = await fastify.undici.fetch(jbody.url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'content-type': 'multipart/form-data;'
+    //   },
+    //   body: JSON.stringify({
+    //     "key": "pics/image_2.jpg",
+    //     "Signature": jbody.authorization,
+    //     "x-cos-security-token": jbody.token,
+    //     "x-cos-meta-fileid": jbody.cos_file_id,
+    //     "file": file
+    //   })
+    // })
+
+    var res = await fastify.axios.post(jbody.url, fData, { headers: fData.getHeaders() })
+
+
+    console.log("-----------", res)
+
+    return jbody || 'no content'
+  })
 }
 
+// curl --location --request POST 'https://cos.ap-shanghai.myqcloud.com/656e-env01-1gn1foc87d62f49f-1308356531/pics/image_2.jpg' \
+// --form 'key="pics/image_2.jpg"' \
+// --form 'Signature="q-sign-algorithm=sha1&q-ak=AKIDJQdNxLmIFVrFeGpL8VZ3A67yYfUNy5E3FYfPbtkGiLV8SBBkmozQn4S4JlXW8t5v&q-sign-time=1645091736;1645092636&q-key-time=1645091736;1645092636&q-header-list=&q-url-param-list=&q-signature=b434996522a1a914853c321b7b32bde593bdd69a"' \
+// --form 'x-cos-security-token="gLbu4GRHdy7JY1wO5fW1LHqyXRlXSXya61eea49340f2c1319556a0551f98d9f8wpkG2bn0daKd5CUxjf5QPU0I9qKIg56WTk2LJGgeSYjdC2SjFckhwKjH3XlnBRiZc9eGF1Q9Bu0o_iudiqVU4V_gp7M0rNZkvAVSR1XT7TO-_E4Pw2cMlEqDquWn0V5ygJ-5Eq97kDYt94gVLHRAKHPHoMX2pXH4uwqT_j0kkLSwLPzsohA-Iv37S7fgLX5tpiSuUSsYIv7t3-sHWMPr_UZiHvGfuHrD61Ol3RjaxkCdkRcTdz6yvdLalsVGYRhSyiin7C6KfleO3-aJuS1G5Wb1bIPi8iSZHX-NbUcLQXP0IRsZ2AIuNjORwf45XgCILGMXxKJz6WCVzP191NsdL440F9aG0K9nXgMepUberes"' \
+// --form 'x-cos-meta-fileid="cloud://env01-1gn1foc87d62f49f.656e-env01-1gn1foc87d62f49f-1308356531/pics/image_2.jpg"' \
+// --form 'file=@"./image_1.jpg"'

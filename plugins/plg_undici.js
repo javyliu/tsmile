@@ -5,6 +5,7 @@ const fp = require("fastify-plugin");
 async function  plg_undici(fastify, opts) {
   const handle = require("undici");
   try {
+    fastify.decorate('undici', handle)
     fastify.decorate('wxClient', new handle.Client('http://api.weixin.qq.com'))
     fastify.decorate('pipClient', new handle.Client('http://m.pipgame.com'))
     fastify.addHook("onClose", (instance, done) => {
