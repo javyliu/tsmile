@@ -4,7 +4,8 @@ module.exports = {
     "username": "javy",
     "password": process.env.tsmile_pwd,
     "database": "tsmile",
-    "host": process.env.host, 
+    "host": "192.168.30.33", 
+    "port": "3306",
     "dialect": "mysql"
   },
   "test": {
@@ -18,7 +19,8 @@ module.exports = {
     "username": "javy",
     "password": process.env.tsmile_pwd,
     "database": "tsmile",
-    "host": process.env.host, 
+    "host": "10.0.224.9", 
+    "port": "22679",
     "dialect": "mysql"
   }
 }

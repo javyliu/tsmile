@@ -21,3 +21,22 @@ Run the test cases.
 ## Learn More
 
 To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+
+# sequelize
+
+create database
+
+### `npx sequelize db:create`
+
+or with production
+
+### `NODE_ENV=production npx sequelize db:create`
+
+run migration
+
+### `npx sequelize db:migrate`
+
+run seeds
+
+### `npx sequelize db:seed:all`
+

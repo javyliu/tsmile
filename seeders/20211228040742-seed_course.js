@@ -11,7 +11,7 @@ courses = courses.map(it => {
     ctitle: it.ctitle,
     price: it.minPrice,
     description: it.description,
-    picImg: it.images.large,
+    picImg: it.images.imgCloudId,
     clickCount: it.hitNum,
     clevel: 2,
     isRecommend: 1,

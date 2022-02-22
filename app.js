@@ -9,7 +9,7 @@ require('dotenv').config()
  * @param {*} opts 
  */
 module.exports = async function (fastify, opts) {
-  
+
   console.log("=========opts: ", opts);
 
   fastify.ready(() => {
@@ -27,12 +27,12 @@ module.exports = async function (fastify, opts) {
     ignorePattern: /^spec.*?.js$/,
     options: Object.assign({}, opts)
   })
-  
+
   // This loads all plugins defined in routes
   // define your routes in one of these
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'routes'),
-    options: Object.assign({ prefix: '/v1'}, opts)
+    options: Object.assign({ prefix: '/v1' }, opts)
   })
 }
 //使用fastify start 启动时，可以在此设置fastify启动时的自定义选项，但必须加上 -o 参数

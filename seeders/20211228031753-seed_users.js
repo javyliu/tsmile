@@ -13,7 +13,7 @@ users = users.map(it => {
     name: it.name,
     pwd: pwd,
     realName: it.name,
-    headPic: it.head_pic,
+    headPic: it.imgCloudId,
     ulevel: 8,
     title: it.title,
     desc: it.desc,
@@ -51,7 +51,7 @@ users.forEach((ele,idx) => {
   } 
   delete ele.course_ids
 });
-console.log(users)
+// console.log(users)
 
 /**
  * @type {import('sequelize-cli').Migration}
