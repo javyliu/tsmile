@@ -27,3 +27,4 @@ knexfile.js
 start_db
 tmp_*
 cate_data.json
+local_imgs

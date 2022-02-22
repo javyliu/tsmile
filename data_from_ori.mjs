@@ -362,8 +362,9 @@ const imgToCloud = async () => {
     try {
       fname = await uploadFile(url)      
     } catch (error) {
-      console.log(error)
+      console.log("error:", fname)
       fname = 'get_error'
+      
     }
     course.images.imgCloudId = fname
   }
@@ -377,7 +378,8 @@ const uploadFile = async (url,preStr = "pics") => {
     return ''
   }
 
-  let filename = `${preStr}/${path.parse(url).base}`
+  let fname = path.parse(url).base
+  let filename = `${preStr}/${fname}`
   console.log("-----------filename: ", filename)
   let { data: res } = await axios.post(remoteObjUrl, {
     env: envServer,
@@ -386,25 +388,59 @@ const uploadFile = async (url,preStr = "pics") => {
 
   console.log("-------res:", res)
 
-  //原图像url
-  let { data: stream } = await axios.get(url, { responseType: 'stream' })
-
+  //原图像url, 不会使用stream， 改用arraybuffer, 最终发现也会出现问题，最后先下载后再上传
+  // let { data: stream } = await axios.get(url, { responseType: 'stream' })
+  // let { data: buffer } = await axios.get(url, { responseType: 'arraybuffer' })
+  //测试了很长时间，关键在于是否在headers中设置 content-length
+  let remoteFileRes = await axios.get(url, { responseType: 'stream' })
+  
   // console.log("--------stream:", stream)
   //上传至对像存储
+  
   let formData = new FormData()
   formData.append("key", filename)
   formData.append("Signature", res.authorization)
   formData.append("x-cos-security-token", res.token)
   formData.append("x-cos-meta-fileid", res.cos_file_id)
-  formData.append("file", await stream.read())
-  await axios.post(res.url, formData, { headers: formData.getHeaders() })
+  // formData.append("file", fs.readFileSync(`./imgs/${fname}`))
+  formData.append("file", remoteFileRes.data)
+  //记住，使用axios时一定要设置conent-length， 不然报错
+  // await axios.post(res.url, formData, { headers: {...formData.getHeaders(), 'content-length': formData.getLengthSync()} })
+
+  formData.getLength(async (err,length) => {
+    await axios.post(res.url, formData, { headers: {...formData.getHeaders(), 'content-length': length} })
+  })  
 
   return res.file_id
 
 }
 
 
+/**
+ * 把图片下载到本地
+ */
+ const downloadFile = async () => {
+  //user head pic
+  let users = JSON.parse(fs.readFileSync('./teacher_data.json'))
 
+  for (const user of users) {
+    let url = user.head_pic
+    let fname = path.parse(url).base
+    var res = await axios.get(url, {responseType:'arraybuffer'});
+    fs.writeFileSync(`./imgs/${path.parse(url).base}`, res.data);
+  }
+
+
+  let courses = JSON.parse(fs.readFileSync('./course_data.json'))
+
+  for (const course of courses) {
+    let url = course.images.large
+    let fname = path.parse(url).base
+    var res = await axios.get(url, {responseType:'arraybuffer'});
+    fs.writeFileSync(`./imgs/${path.parse(url).base}`, res.data);
+  }
+
+}
 
 //////////////////////////////////////////
 //得到所有课程类别
@@ -425,9 +461,21 @@ const uploadFile = async (url,preStr = "pics") => {
 //////////////////////////////////////////
 
 //////////////////////////////////////////
+// 存储文件到本地
+// await downloadFile()
+//////////////////////////////////////////
+
+//////////////////////////////////////////
 // 上传相应图片至云端
 await imgToCloud()
-// await uploadFile('http://www.tsmileedu.com/files/user/2018/05-22/224116c80100914807.jpg')
+// await uploadFile('http://www.tsmileedu.com/files/course/2020/04-10/16433687bb8d281115.png')
+// await uploadFile('http://www.tsmileedu.com/files/user/2019/05-30/083419b38523532202.png')                                                                      
+//await uploadFile('http://www.tsmileedu.com/files/user/2020/03-02/200914a15b4b002902.png')                                                                    
+//await uploadFile('http://www.tsmileedu.com/files/course/2021/05-19/164103f94680833560.jpg')                                                                  
+//await uploadFile('http://www.tsmileedu.com/files/default/2015/06-23/1941437b2b1c391389.jpg')                                                                 
+//await uploadFile('http://www.tsmileedu.com/files/course/2021/01-12/20525139fb5a548457.jpg') // 20k                                                           
+//await uploadFile('http://www.tsmileedu.com/files/course/2020/04-08/135455fe3b27929640.jpg') //19k                                                            
+//await uploadFile('http://www.tsmileedu.com/files/course/2020/04-08/142340c5f2a8716784.jpg') //11k, ok 
 //////////////////////////////////////////
 
 
