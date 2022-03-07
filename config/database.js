@@ -1,7 +1,11 @@
 require('dotenv').config();
 module.exports = {
   "development": {
-    "url": process.env.db,
+    "username": "javy",
+    "password": process.env.pwd,
+    "database": "tsmile",
+    "host": process.env.host,
+    "port": "3306",
     "dialect": "mysql"
   },
   "test": {
@@ -12,7 +16,11 @@ module.exports = {
     "dialect": "mysql"
   },
   "production": {
-    "url": process.env.db_pro,
+    "username": "javy",
+    "password": process.env.pro_pwd,
+    "database": "tsmile",
+    "host": process.env.pro_host,
+    "port": "3306",
     "dialect": "mysql"
   }
 }
