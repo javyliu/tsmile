@@ -21,7 +21,7 @@ const coursePath = "/course/explore"
 const teacherPath = "/teacher"
 
 const wxApiUrl = 'http://api.weixin.qq.com'
-const envServer = 'env01-1gn1foc87d62f49f'
+const envServer = 'prod-8gss4ruj6b2f1e24'
 
 let remoteObjUrl = `${wxApiUrl}/tcb/uploadfile`
 

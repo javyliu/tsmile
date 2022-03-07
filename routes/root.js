@@ -132,13 +132,13 @@ module.exports = async function (fastify, opts) {
     //   path: '/tcb/uploadfile',
     //   method: 'POST',
     //   body: JSON.stringify({
-    //     env: 'env01-1gn1foc87d62f49f',
+    //     env: 'prod-8gss4ruj6b2f1e24',
     //     path: "pics/image_2.jpg"
     //   })
     // })
 
     var res = await fastify.axios.wx.post('/tcb/uploadfile', {
-      env: 'env01-1gn1foc87d62f49f',
+      env: 'prod-8gss4ruj6b2f1e24',
       path: "pics/image_3.jpg"
     })
 
