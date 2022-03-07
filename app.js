@@ -10,7 +10,7 @@ require('dotenv').config()
  */
 module.exports = async function (fastify, opts) {
 
-  console.log("=========opts: ", opts);
+  console.log("==========opts: ", opts);
 
   fastify.ready(() => {
     console.log(fastify.printRoutes())

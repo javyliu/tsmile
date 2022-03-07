@@ -58,6 +58,8 @@ users.forEach((ele,idx) => {
  */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    console.log("-----------migrate up")
+
     /**
      * Add seed commands here.
      *
